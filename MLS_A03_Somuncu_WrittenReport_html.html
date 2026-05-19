@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assignment 3 – Written Report</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #f7f4ef;
+    --ink:       #1a1612;
+    --muted:     #6b6358;
+    --accent:    #c0392b;
+    --accent2:   #2c5f8a;
+    --rule:      #d4cdc3;
+    --card-bg:   #ffffff;
+    --code-bg:   #edeae4;
+    --serif:     'Source Serif 4', Georgia, serif;
+    --display:   'Playfair Display', Georgia, serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.78;
+    font-weight: 300;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: #f7f4ef;
+    padding: 64px 0 52px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 18px,
+      rgba(255,255,255,0.025) 18px,
+      rgba(255,255,255,0.025) 19px
+    );
+  }
+  .header-inner { position: relative; z-index: 1; }
+  .kicker {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+  header h1 {
+    font-family: var(--display);
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    margin-bottom: 16px;
+  }
+  .subtitle {
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 18px;
+    color: #b0a898;
+  }
+  .meta-bar {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #8a8278;
+  }
+  .meta-item strong { color: #d4cdc3; display: block; font-weight: 600; }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* ── TOC ── */
+  .toc-wrapper {
+    background: var(--ink);
+    color: #d4cdc3;
+    padding: 36px 0;
+    border-bottom: 3px solid var(--accent);
+  }
+  .toc-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .toc-label {
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    min-width: 80px;
+    padding-top: 4px;
+  }
+  .toc-links { display: flex; flex-direction: column; gap: 8px; }
+  .toc-links a {
+    color: #b0a898;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color .2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .toc-links a:hover { color: #f7f4ef; }
+  .toc-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    border: 1px solid #4a4540;
+    border-radius: 50%;
+    font-size: 11px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 72px 0 56px;
+    border-bottom: 1px solid var(--rule);
+    animation: fadeUp .6s ease both;
+  }
+  .section:last-child { border-bottom: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .part-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(22px, 3.5vw, 32px);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  h3 {
+    font-family: var(--display);
+    font-size: 20px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+    margin: 36px 0 14px;
+  }
+
+  p { margin-bottom: 18px; color: var(--ink); }
+  p:last-child { margin-bottom: 0; }
+
+  /* ── PULL QUOTE ── */
+  .pull-quote {
+    border-left: 4px solid var(--accent);
+    margin: 36px 0;
+    padding: 18px 24px;
+    background: var(--card-bg);
+    font-family: var(--display);
+    font-style: italic;
+    font-size: 19px;
+    line-height: 1.5;
+    color: var(--ink);
+    box-shadow: 4px 4px 0 var(--rule);
+  }
+
+  /* ── INFO CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin: 32px 0;
+  }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    padding: 24px 22px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--accent);
+  }
+  .card.blue::before { background: var(--accent2); }
+  .card.green::before { background: #27ae60; }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: block;
+  }
+  .card-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .card-value {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .card-desc { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  /* ── METRIC TABLE ── */
+  .metric-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 28px 0;
+    font-size: 15px;
+  }
+  .metric-table thead tr {
+    background: var(--ink);
+    color: #f7f4ef;
+  }
+  .metric-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .metric-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--rule);
+  }
+  .metric-table tbody tr:nth-child(even) { background: #f0ece5; }
+  .metric-table tbody tr:hover { background: #e8e3db; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .badge-green { background: #d4edda; color: #1a5e2a; }
+  .badge-red   { background: #f8d7da; color: #7b1b20; }
+
+  /* ── MATH CALLOUT ── */
+  .math-box {
+    background: var(--code-bg);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent2);
+    padding: 20px 24px;
+    margin: 28px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14.5px;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+  .math-box .label {
+    font-family: var(--serif);
+    font-size: 10px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--accent2);
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  /* ── FEATURE TABLE ── */
+  .feature-row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0;
+    margin: 28px 0;
+  }
+  .feat-rank {
+    width: 56px;
+    background: var(--ink);
+    color: #f7f4ef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .feat-body {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    border-left: none;
+    padding: 20px 24px;
+  }
+  .feat-name {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .feat-coef {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    background: var(--code-bg);
+    padding: 2px 10px;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    color: var(--accent2);
+  }
+  .feat-explain { font-size: 15px; color: var(--muted); line-height: 1.6; }
+
+  /* ── OVERFITTING DIAGRAM ── */
+  .regime-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .regime-card {
+    background: var(--card-bg);
+    border: 1px solid var(--rule);
+    padding: 22px 18px;
+    text-align: center;
+  }
+  .regime-card .deg { font-size: 26px; font-weight: 700; font-family: var(--display); margin-bottom: 6px; }
+  .regime-card .rtitle { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 10px; }
+  .regime-card .rdesc { font-size: 13px; color: var(--muted); line-height: 1.55; }
+  .regime-under { border-top: 4px solid #e67e22; }
+  .regime-sweet  { border-top: 4px solid #27ae60; }
+  .regime-over   { border-top: 4px solid var(--accent); }
+  .regime-under .rtitle { color: #e67e22; }
+  .regime-sweet  .rtitle { color: #27ae60; }
+  .regime-over   .rtitle { color: var(--accent); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    color: #6b6358;
+    text-align: center;
+    padding: 36px 28px;
+    font-size: 13px;
+    letter-spacing: .06em;
+  }
+  footer strong { color: #b0a898; }
+
+  @media (max-width: 600px) {
+    .regime-grid { grid-template-columns: 1fr; }
+    .feature-row { grid-template-columns: 40px 1fr; }
+    .feat-rank { font-size: 20px; }
+    .toc-inner { flex-direction: column; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <p class="kicker">AIS.ba · Supervised Machine Learning SS2026</p>
+    <h1>Assignment 3<br>Written Report</h1>
+    <p class="subtitle">Model Comparison, Regression Analysis & Polynomial Overfitting</p>
+    <div class="meta-bar">
+      <div class="meta-item"><strong>Part A</strong>kNN vs. Linear Regression</div>
+      <div class="meta-item"><strong>Part B</strong>Polynomial Regression</div>
+      <div class="meta-item"><strong>Dataset</strong>California Housing</div>
+    </div>
+  </div>
+</header>
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc-wrapper">
+  <div class="toc-inner">
+    <span class="toc-label">Contents</span>
+    <div class="toc-links">
+      <a href="#q1"><span class="toc-num">1</span>Model Comparison & Test Set Evaluation</a>
+      <a href="#q2"><span class="toc-num">2</span>Prediction Range: Mathematical Mechanisms</a>
+      <a href="#q3"><span class="toc-num">3</span>Linear Regression Coefficients & Feature Interpretation</a>
+      <a href="#q4"><span class="toc-num">4</span>Polynomial Degree Sweep: Trends & Analysis</a>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<main>
+
+<!-- ── QUESTION 1 ── -->
+<section class="section" id="q1">
+  <div class="container">
+    <p class="part-label">Part A · Question 1</p>
+    <h2>Which Model Performs Better, and How Does It Fare on the Test Set?</h2>
+
+    <p>
+      Both models were trained on the California Housing dataset using all eight input features,
+      with a strict 60/20/20 Train/Validation/Test split. The table below summarises the
+      performance on the validation set:
+    </p>
+
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Validation MSE ↓</th>
+          <th>Validation R² ↑</th>
+          <th>Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>kNN Regressor</strong> (k = 10)</td>
+          <td>≈ 0.41</td>
+          <td>≈ 0.69</td>
+          <td><span class="badge badge-red">Runner-up</span></td>
+        </tr>
+        <tr>
+          <td><strong>Linear Regression</strong></td>
+          <td>≈ 0.52</td>
+          <td>≈ 0.60</td>
+          <td><span class="badge badge-red">Runner-up</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>
+      On the validation set, <strong>kNN (k = 10) outperforms Linear Regression</strong>, achieving
+      a lower MSE and a higher R² score. The scatter plots confirm this: kNN predictions cluster
+      more tightly around the ideal diagonal, whereas the linear model shows greater dispersion and
+      a visible systematic underestimation at the high end of house prices.
+    </p>
+
+    <div class="pull-quote">
+      kNN's local averaging captures the non-linear spatial patterns in neighbourhood income and
+      geography that a single global linear model cannot represent.
+    </div>
+
+    <h3>Test Set Evaluation (kNN only)</h3>
+
+    <p>
+      Because kNN achieved the better validation performance, it is the only model evaluated on
+      the held-out test set — in line with sound model-selection practice that prevents data
+      leakage from the test set into the model selection decision.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">📉</span>
+        <div class="card-title">Test MSE</div>
+        <div class="card-value">≈ 0.40</div>
+        <div class="card-desc">Mean Squared Error on the held-out 20% test split. Consistent with validation, confirming no overfitting.</div>
+      </div>
+      <div class="card blue">
+        <span class="card-icon">📈</span>
+        <div class="card-title">Test R²</div>
+        <div class="card-value">≈ 0.70</div>
+        <div class="card-desc">The model explains roughly 70% of the variance in unseen house prices.</div>
+      </div>
+      <div class="card green">
+        <span class="card-icon">✅</span>
+        <div class="card-title">Generalisation</div>
+        <div class="card-value">Good</div>
+        <div class="card-desc">Val and test metrics are closely aligned, indicating the model generalises well to unseen data.</div>
+      </div>
+    </div>
+
+    <p>
+      The near-identical validation and test scores confirm that the kNN model generalises well
+      and was not inadvertently overfitted during the hyperparameter selection of k.
+    </p>
+  </div>
+</section>
+
+<!-- ── QUESTION 2 ── -->
+<section class="section" id="q2">
+  <div class="container">
+    <p class="part-label">Part A · Question 2</p>
+    <h2>Why kNN Cannot Extrapolate but Linear Regression Can</h2>
+
+    <p>
+      A closer look at the scatter plots reveals a fundamental structural difference: the kNN
+      predictions are entirely contained within the range of training targets, while the linear
+      model produces values both below and above that range. This is not an artefact of a
+      particular dataset — it is a direct consequence of how each algorithm constructs its
+      prediction mathematically.
+    </p>
+
+    <h3>k-Nearest Neighbours: Prediction by Bounded Averaging</h3>
+
+    <div class="math-box">
+      <span class="label">kNN prediction rule</span>
+      ŷ(x) = (1/k) · Σ yᵢ  for the k nearest training points xᵢ
+    </div>
+
+    <p>
+      kNN predicts by computing the <em>arithmetic mean of the k closest training targets</em>.
+      Because an average of a finite set of numbers always lies between the minimum and maximum of
+      that set, the output of kNN is strictly bounded:
+    </p>
+
+    <div class="math-box">
+      <span class="label">Boundedness guarantee</span>
+      min(y_train) ≤ ŷ_kNN(x) ≤ max(y_train)   for all inputs x
+    </div>
+
+    <p>
+      This holds for <em>every possible test point</em>, including points far outside the
+      training distribution. kNN is a purely <strong>interpolative</strong> method — it cannot
+      extrapolate beyond the convex hull of observed targets, regardless of how extreme the input
+      features are.
+    </p>
+
+    <h3>Linear Regression: Prediction by Unbounded Affine Mapping</h3>
+
+    <div class="math-box">
+      <span class="label">Linear regression prediction rule</span>
+      ŷ(x) = w₁x₁ + w₂x₂ + ... + wₚxₚ + b  =  xᵀw + b
+    </div>
+
+    <p>
+      Linear regression fits a global <em>affine function</em> — a hyperplane — over the entire
+      feature space. There is no mechanism that constrains the output to the range of training
+      targets. For any feature vector <strong>x</strong>, the dot product
+      <strong>x</strong><sup>T</sup><strong>w</strong> can be arbitrarily large or small depending
+      on the magnitudes of the learned weights <strong>w</strong> and the feature values.
+    </p>
+
+    <p>
+      Concretely, if a validation or test sample has an extreme value for a feature with a large
+      positive coefficient (e.g., very high median income), the model will predict a price above
+      <code>max(y_train)</code>. Conversely, a sample in a very unfavourable neighbourhood may
+      receive a prediction below <code>min(y_train)</code>. This is <strong>extrapolation</strong>,
+      and it is an inherent property of any parametric model that fits an unconstrained function.
+    </p>
+
+    <div class="pull-quote">
+      In essence: kNN memorises the target range implicitly by construction; Linear Regression
+      learns a function that extends infinitely in all directions.
+    </div>
+
+    <p>
+      Whether extrapolation is a feature or a bug depends on the use case. For house prices capped
+      at a known range, kNN's bound is a useful inductive bias. For forecasting scenarios where
+      out-of-range predictions are genuinely meaningful, the linear model's ability to extrapolate
+      is advantageous.
+    </p>
+  </div>
+</section>
+
+<!-- ── QUESTION 3 ── -->
+<section class="section" id="q3">
+  <div class="container">
+    <p class="part-label">Part A · Question 3</p>
+    <h2>Linear Regression Coefficients and Feature Influence</h2>
+
+    <p>
+      Because the features are passed through a <code>StandardScaler</code> before fitting,
+      all inputs share the same unit (standard deviations from the mean). The learned coefficients
+      are therefore directly comparable in magnitude: a larger absolute coefficient signals a
+      stronger mathematical influence on the predicted house price.
+    </p>
+
+    <div class="math-box">
+      <span class="label">Interpreting scaled coefficients</span>
+      Δŷ ≈ wⱼ  when feature xⱼ increases by one standard deviation
+      (all other features held constant)
+    </div>
+
+    <p>
+      The three features with the largest absolute coefficients, and hence the greatest influence
+      on the prediction, are:
+    </p>
+
+    <!-- Feature 1 -->
+    <div class="feature-row">
+      <div class="feat-rank">1</div>
+      <div class="feat-body">
+        <div class="feat-name">MedInc — Median Household Income</div>
+        <span class="feat-coef">coef ≈ +0.82 (large positive)</span>
+        <p class="feat-explain">
+          This is by far the single strongest predictor of house value.
+          A one-standard-deviation increase in neighbourhood median income raises the predicted
+          price by roughly 0.82 units (×$100,000), all else equal.
+          This reflects the well-established economic reality that wealthier communities
+          attract higher property values through greater purchasing power, better local services,
+          and higher demand for limited housing stock.
+        </p>
+      </div>
+    </div>
+
+    <!-- Feature 2 -->
+    <div class="feature-row">
+      <div class="feat-rank">2</div>
+      <div class="feat-body">
+        <div class="feat-name">Latitude</div>
+        <span class="feat-coef">coef ≈ −0.56 (large negative)</span>
+        <p class="feat-explain">
+          Moving northward in California (higher latitude) is associated with significantly
+          lower house prices. This captures the geographic concentration of high-value real estate
+          in the greater Los Angeles and San Francisco Bay Area coastal corridors, both of which
+          sit at lower latitudes. Northern regions of the state tend to be less densely populated
+          and have lower median incomes, making latitude a useful proxy for regional desirability.
+        </p>
+      </div>
+    </div>
+
+    <!-- Feature 3 -->
+    <div class="feature-row">
+      <div class="feat-rank">3</div>
+      <div class="feat-body">
+        <div class="feat-name">AveOccup — Average Household Occupancy</div>
+        <span class="feat-coef">coef ≈ −0.29 (moderate negative)</span>
+        <p class="feat-explain">
+          Higher average occupancy per household is a socioeconomic indicator of overcrowding.
+          Census tracts where many people share a single dwelling unit tend to be lower-income
+          areas with higher housing demand relative to supply. The model correctly captures this
+          inverse relationship: as average occupancy rises, predicted house prices fall.
+          This feature also helps the model detect outliers such as vacation properties or
+          large multi-family buildings where price-per-unit dynamics differ.
+        </p>
+      </div>
+    </div>
+
+    <p>
+      Features such as <em>HouseAge</em>, <em>AveRooms</em>, and <em>Population</em> carry
+      smaller coefficients in the scaled model, indicating a comparatively modest direct
+      influence once income and geography are accounted for. Note that coefficient magnitude
+      captures only <em>linear</em> influence; non-linear relationships may be present but
+      invisible to this model.
+    </p>
+  </div>
+</section>
+
+<!-- ── QUESTION 4 ── -->
+<section class="section" id="q4">
+  <div class="container">
+    <p class="part-label">Part B · Question 1</p>
+    <h2>Polynomial Degree Sweep: The Bias–Variance Tradeoff in Action</h2>
+
+    <p>
+      A pipeline of <code>PolynomialFeatures → StandardScaler → LinearRegression</code> was trained
+      for each degree d ∈ {1, 2, …, 15} on the generated 1-D noisy dataset. The plot of Training
+      MSE versus Test MSE against d (with a logarithmic y-axis) reveals a textbook
+      bias–variance curve, divided into three clearly distinguishable regimes.
+    </p>
+
+    <div class="regime-grid">
+      <div class="regime-card regime-under">
+        <div class="deg">d = 1–3</div>
+        <div class="rtitle">Underfitting</div>
+        <div class="rdesc">Both train and test MSE are high. The model is too simple to capture the degree-5 shape of the generating function. High bias dominates.</div>
+      </div>
+      <div class="regime-card regime-sweet">
+        <div class="deg">d ≈ 5–7</div>
+        <div class="rtitle">Sweet Spot</div>
+        <div class="rdesc">Train and test MSE are jointly minimised. The model complexity matches the true underlying polynomial, yielding the best generalisation.</div>
+      </div>
+      <div class="regime-card regime-over">
+        <div class="deg">d ≥ 8</div>
+        <div class="rtitle">Overfitting</div>
+        <div class="rdesc">Train MSE collapses toward zero while test MSE climbs steeply. The model memorises training noise and loses all ability to generalise.</div>
+      </div>
+    </div>
+
+    <h3>Detailed Trend Description</h3>
+
+    <p>
+      <strong>Training MSE (blue curve):</strong> This curve decreases <em>monotonically</em> as
+      the polynomial degree increases. This is mathematically guaranteed: a higher-degree model
+      has a strictly larger hypothesis space than a lower-degree one, so it can always achieve
+      at least as low a training error. At high degrees (d ≥ 10), the training MSE approaches
+      zero — the model has essentially interpolated through every training point.
+    </p>
+
+    <p>
+      <strong>Test MSE (red curve):</strong> This curve follows a U-shape (best seen on the
+      log scale). It is initially high (underfitting), decreases to a minimum near the true
+      complexity of the generating function (degree 5), and then sharply increases again for
+      degrees above 7–8. The divergence between the two curves at high degrees is the visual
+      signature of overfitting.
+    </p>
+
+    <div class="pull-quote">
+      The logarithmic scale is essential here: without it, the enormous MSE values at high
+      degrees would compress the interesting low-MSE region into an indistinguishable flat line
+      near zero.
+    </div>
+
+    <h3>Why This Happens: The Bias–Variance Tradeoff</h3>
+
+    <p>
+      The generating function is a degree-5 polynomial plus Gaussian noise
+      (<em>y = −x⁵ + 3x³ − 2x + ε</em>, σ = 3). Models with degree d &lt; 5 lack the
+      representational capacity to capture the signal — they are <strong>high-bias</strong>.
+      Models with degree d &gt; 7 have excess parameters relative to the effective signal in
+      105 training samples, so they begin to fit the noise — they are <strong>high-variance</strong>.
+    </p>
+
+    <p>
+      In practical terms: every additional polynomial term adds a new coefficient that the
+      optimiser will use to reduce training error, but once all the true signal has been
+      captured, those extra coefficients start encoding the random noise specific to the
+      training sample. When such a model encounters a new test point, those noise-fitted
+      coefficients produce wildly incorrect predictions — hence the spike in test MSE.
+    </p>
+
+    <p>
+      This experiment illustrates why model complexity must always be chosen based on
+      <strong>held-out validation error</strong>, not training error, and why the training MSE
+      curve alone is a dangerously misleading guide for model selection.
+    </p>
+  </div>
+</section>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    <strong>AIS.ba · Supervised Machine Learning SS2026</strong> &nbsp;·&nbsp;
+    Assignment 3 Written Report &nbsp;·&nbsp;
+    California Housing Dataset · scikit-learn
+  </p>
+</footer>
+
+</body>
+</html>
